@@ -7,33 +7,45 @@ st.set_page_config(page_title="Gesundheits- & Fitness-Check", page_icon="🏥", 
 st.title("🏥 Dein persönlicher Gesundheits- & Fitness-Check")
 st.write("Professionelles Tool zur Selbsteinschätzung deiner körperlichen Verfassung und Arbeitsbelastung.")
 
-# --- SEITENLEISTE (Eingaben) ---
-st.sidebar.header("📝 Deine Eckdaten")
+# --- EINGABEN DIREKT AUF DER HAUPTSEITE (FÜR MOBILE OPTIMIERT) ---
+st.markdown("### 📝 Deine Eckdaten & Gewohnheiten")
 
-name = st.sidebar.text_input("Wie heißt du?", "Max")
-age = st.sidebar.number_input("Wie alt bist du?", min_value=1, max_value=120, value=30, step=1)
+# Wir nutzen Spalten, damit es auf dem PC schön breit und auf dem Handy untereinander angeordnet wird
+col_input1, col_input2 = st.columns(2)
 
-# IT-Easter Egg für das Alter 42
-if age == 42:
-    st.sidebar.success(
-        "🤖 Alter 42 erkannt: Die Antwort auf das Leben, das Universum und den ganzen Rest! (Aber wie steht's um deine Gesundheit? 😉)")
+with col_input1:
+    name = st.text_input("Wie heißt du?", "Max")
+    age = st.number_input("Wie alt bist du?", min_value=1, max_value=120, value=30, step=1)
 
-smoker_input = st.sidebar.radio("Bist du Raucher?", ["Nein", "Ja"])
-is_smoker = True if smoker_input == "Ja" else False
+    # IT-Easter Egg für das Alter 42
+    if age == 42:
+        st.success("🤖 Alter 42 erkannt: Die Antwort auf das Leben, das Universum und den ganzen Rest! 😉")
 
-job = st.sidebar.selectbox("Was machst du beruflich?", ["IT", "Handwerk", "Tiefbau", "Verkauf", "Friseure", "Schüler"])
+    smoker_input = st.radio("Bist du Raucher?", ["Nein", "Ja"])
+    is_smoker = True if smoker_input == "Ja" else False
 
-weight = st.sidebar.number_input("Gewicht in kg (z.B. 78)", min_value=20.0, max_value=300.0, value=75.0, step=0.5)
-height_cm = st.sidebar.number_input("Größe in cm (z.B. 175)", min_value=50.0, max_value=250.0, value=175.0, step=1.0)
+    job = st.selectbox("Was machst du beruflich?", ["IT", "Handwerk", "Tiefbau", "Verkauf", "Friseure", "Schüler"])
 
-# Alkohol-Auswahl
-alk_wahl = st.sidebar.selectbox("Alkohol-Konsum", [
-    "Nie oder sehr selten",
-    "1 bis 3 Mal im Monat / zu besonderen Anlässen",
-    "1 bis 3 Mal pro Woche",
-    "Fast täglich oder täglich"
-])
+with col_input2:
+    weight = st.number_input("Gewicht in kg (z.B. 78)", min_value=20.0, max_value=300.0, value=75.0, step=0.5)
+    height_cm = st.number_input("Größe in cm (z.B. 175)", min_value=50.0, max_value=250.0, value=175.0, step=1.0)
 
+    # Alkohol-Auswahl
+    alk_wahl = st.selectbox("Alkohol-Konsum", [
+        "Nie oder sehr selten",
+        "1 bis 3 Mal im Monat / zu besonderen Anlässen",
+        "1 bis 3 Mal pro Woche",
+        "Fast täglich oder täglich"
+    ])
+
+    # Sport-Auswahl
+    sport_wahl = st.selectbox("Sport & Bewegung", [
+        "Sehr aktiv (3+ mal/Woche)",
+        "Mäßig aktiv (1-2 mal/Woche)",
+        "Eher inaktiv / Wenig Sport"
+    ])
+
+# Alkohol-Punkte logik
 if alk_wahl == "Nie oder sehr selten":
     alk_punkte = 0
 elif alk_wahl == "1 bis 3 Mal im Monat / zu besonderen Anlässen":
@@ -43,13 +55,7 @@ elif alk_wahl == "1 bis 3 Mal pro Woche":
 else:
     alk_punkte = 5
 
-# Sport-Auswahl
-sport_wahl = st.sidebar.selectbox("Sport & Bewegung", [
-    "Sehr aktiv (3+ mal/Woche)",
-    "Mäßig aktiv (1-2 mal/Woche)",
-    "Eher inaktiv / Wenig Sport"
-])
-
+# Sport-Punkte logik
 if sport_wahl == "Sehr aktiv (3+ mal/Woche)":
     sport_bonus = 15
     sport_punkte_vis = 0
@@ -94,6 +100,7 @@ faktor_wasser = 35 if age < 65 else 30
 wasser_liter = (weight * faktor_wasser) / 1000
 
 # Branchenspezifische Fragen
+st.markdown("---")
 st.header(f"🧩 Belastungs-Check für den Bereich: {job}")
 
 fragen_liste = []
@@ -166,7 +173,8 @@ for bereich, frage in fragen_liste:
         ergebnisse_arbeit[bereich] = 2
 
 # --- AUSWERTUNG ANZEIGEN ---
-if st.button("🚀 Gesundheits-Check auswerten"):
+st.markdown("---")
+if st.button("🚀 Gesundheits-Check auswerten", use_container_width=True):
     abzug_fragen = sum(ergebnisse_arbeit.values()) * 3
     abzug_raucher = 15 if is_smoker else 0
     abzug_alkohol = alk_punkte * 3
