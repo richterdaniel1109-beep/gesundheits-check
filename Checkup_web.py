@@ -4,6 +4,24 @@ import matplotlib.pyplot as plt
 # Webseiten-Konfiguration auf "wide" für ein modernes Layout
 st.set_page_config(page_title="Gesundheits- & Fitness-Check", page_icon="🏥", layout="wide")
 
+# --- GOOGLE ANALYTICS INTEGRATION ---
+# Ersetze 'G-DEINE_ID' mit deiner echten Google Analytics Measurement-ID!
+GA_MEASUREMENT_ID = "G-FSLDQDD6YJ"
+
+ga_code = f"""
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+
+  gtag('config', '{GA_MEASUREMENT_ID}');
+</script>
+"""
+# Lädt das Tracking unsichtbar in die App
+st.components.v1.html(ga_code, height=0, width=0)
+# -----------------------------------
+
 st.title("🏥 Dein persönlicher Gesundheits- & Fitness-Check")
 st.write("Professionelles Tool zur Selbsteinschätzung deiner körperlichen Verfassung und Arbeitsbelastung.")
 
