@@ -24,7 +24,6 @@ ga_html = f"""
 st.markdown(ga_html, unsafe_allow_html=True)
 
 # Lädt das Tracking unsichtbar in die App
-st.components.v1.html(ga_code, height=0, width=0)
 # -----------------------------------
 
 st.title("🏥 Dein persönlicher Gesundheits- & Fitness-Check")
