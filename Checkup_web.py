@@ -4,20 +4,25 @@ import matplotlib.pyplot as plt
 # Webseiten-Konfiguration auf "wide" für ein modernes Layout
 st.set_page_config(page_title="Gesundheits- & Fitness-Check", page_icon="🏥", layout="wide")
 
-# --- GOOGLE ANALYTICS INTEGRATION ---
-# Ersetze 'G-DEINE_ID' mit deiner echten Google Analytics Measurement-ID!
+# --- GOOGLE ANALYTICS INTEGRATION (HEADER INJECTION) ---
 GA_MEASUREMENT_ID = "G-FSLDQDD6YJ"
 
-ga_code = f"""
-<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-
-  gtag('config', '{GA_MEASUREMENT_ID}');
-</script>
+ga_html = f"""
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{GA_MEASUREMENT_ID}');
+  </script>
+</head>
 """
+
+# Injiziert den Code direkt in den Kopfbereich der Webseite
+st.markdown(ga_html, unsafe_allow_html=True)
+-----------------------------------------------------------
 # Lädt das Tracking unsichtbar in die App
 st.components.v1.html(ga_code, height=0, width=0)
 # -----------------------------------
